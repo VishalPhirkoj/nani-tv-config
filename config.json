@@ -1,0 +1,21 @@
+{
+  "wallpaper": null,
+  "accent": "#E6C068",
+  "columns": 2,
+  "shows": [
+    {
+      "name": "బ్రహ్మముడి",
+      "image": "",
+      "url": "https://www.hotstar.com/in/shows/brahma-mudi/1260129377",
+      "package": "in.startv.hotstar",
+      "schedule": "mon-sat"
+    },
+    {
+      "name": "చామంతి",
+      "image": "",
+      "url": "https://www.zee5.com/tv-shows/details/chamanthi/0-6-4z5681660",
+      "package": "com.graymatrix.did",
+      "schedule": "mon-sat"
+    }
+  ]
+}
