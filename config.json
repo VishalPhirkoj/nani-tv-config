@@ -1,18 +1,29 @@
 {
+  "updated": "2026-11-24",
   "wallpaper": null,
   "accent": "#E6C068",
-  "columns": 2,
+  "slide_seconds": 3,
   "shows": [
     {
+      "id": "brahmamudi",
+      "enabled": true,
       "name": "బ్రహ్మముడి",
-      "image": "",
+      "name_en": "Brahmamudi",
+      "channel": "Star Maa",
+      "image_landscape": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/posters/brahmamudi-landscape.jpg",
+      "image_portrait": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/posters/brahmamudi-portrait.jpg",
       "url": "https://www.hotstar.com/in/shows/brahma-mudi/1260129377",
       "package": "in.startv.hotstar",
       "schedule": "mon-sat"
     },
     {
+      "id": "chamanthi",
+      "enabled": true,
       "name": "చామంతి",
-      "image": "",
+      "name_en": "Chamanthi",
+      "channel": "Zee Telugu",
+      "image_landscape": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/posters/chamanthi-landscape.jpg",
+      "image_portrait": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/posters/chamanthi-portrait.jpg",
       "url": "https://www.zee5.com/tv-shows/details/chamanthi/0-6-4z5681660",
       "package": "com.graymatrix.did",
       "schedule": "mon-sat"
