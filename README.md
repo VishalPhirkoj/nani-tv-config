@@ -8,15 +8,16 @@ aur Home dabate hi yahi app saamne aata hai.
 
 - Ek waqt pe ek serial — full-screen landscape poster, neeche bada Telugu
   naam (Zee5 me naam poster me hi hota hai, wahan chhupa rehta hai), uske
-  neeche "Brahmamudi · Star Maa · JioHotstar · New Episode Today", sabse
-  neeche dots (kaunsa serial chal raha hai)
+  neeche "[JioHotstar logo] · [Star Maa logo] · Brahmamudi · New Episode
+  Today" ("New Episode Today" sirf jab `schedule` ke hisaab se aaj episode
+  hai), sabse neeche dots (kaunsa serial chal raha hai)
 - Har `slide_seconds` (default 3) me agla serial, crossfade ke saath
 - Remote: ◀ ▶ se aage/peeche. Remote dabate hi auto-slide 15 sec ruk jaata hai
 - OK = screen pe jo serial hai wahi khulega. Slide badalte hi (0.8 sec ke
   andar) OK dabaya toh pichla wala khulta hai — jo Nani dekh rahi thi
 - Back = kuch nahi. **Back 3 second pakdo** = Android TV ka asli home
   khulta hai (settings / doosre apps ke liye). Screen pe upar-daayein
-  English me likha rehta hai. Android home pe 2 minute koi button na dabe
+  likha rehta hai: "Hold BACK for 3 seconds to exit". Android home pe 2 minute koi button na dabe
   → Nani TV khud wapas (button dabte raho toh nahi kudta; Settings jaise
   doosre app me ho toh beech me nahi aata)
 
@@ -101,7 +102,7 @@ Poora example is repo ke [config.json](config.json) me hai.
 | `enabled` | nahi | `false` = chhupa do, delete mat karo (default `true`) |
 | `name` | nahi | Bada naam (Telugu) |
 | `name_en` | nahi | Neeche chhota English naam |
-| `channel` | nahi | English naam ke saath: "Brahmamudi · Star Maa · JioHotstar" |
+| `channel` | nahi | Subtitle me OTT ke baad: "JioHotstar · Star Maa · Brahmamudi" (logo ho toh logo) |
 | `image_landscape` | nahi | Carousel poster, 1280x720 (16:9), poori screen bharta hai. Purana `image` field bhi chalta hai |
 | `image_portrait` | nahi | Backup — landscape na ho ya load fail ho toh ye poora (bina kaate) dikhta hai |
 | `title_in_image` | nahi | `true` = poster me naam pehle se likha hai, bada title mat dikhao. Default: `zee5` pe `true`, baaki pe `false`. Poster load na ho toh title wapas aa jaata hai |

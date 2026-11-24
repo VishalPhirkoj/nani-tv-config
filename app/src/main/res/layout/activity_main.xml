@@ -72,14 +72,14 @@
             android:shadowDy="3"
             android:shadowRadius="10" />
 
-        <!-- English naam · channel · OTT · New Episode Today -->
+        <!-- [OTT logo] · [channel logo] · English naam · New Episode Today (sirf aaj) -->
         <TextView
             android:id="@+id/subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textColor="#E6FFFFFF"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:maxLines="2"
             android:ellipsize="end"
             android:shadowColor="#CC000000"

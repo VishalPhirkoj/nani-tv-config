@@ -9,6 +9,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ImageSpan
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -129,7 +130,9 @@ class Carousel(
     }
 
     /**
-     * "Chamanthi · [Zee Telugu logo] · [Zee5 logo] · New Episode Today".
+     * "[Zee5 logo] · [Zee Telugu logo] · Chamanthi · New Episode Today".
+     * Pehle OTT (kis app me khulega), phir channel, phir English naam.
+     * "New Episode Today" sirf jab schedule ke hisaab se aaj episode hai.
      * Logo load nahi hua (ya config me nahi) toh uski jagah naam text me.
      * Ek hi TextView + ImageSpan — lamba naam pehle jaisa doosri line me wrap hota hai.
      * Agar title hi English naam hai (Telugu khaali) aur wo dikh raha hai, toh dobara mat likho.
@@ -137,9 +140,9 @@ class Carousel(
     private fun renderSubtitle(show: Show) {
         val badgeText = Badge.textFor(show.schedule)?.let { subtitle.resources.getString(it) }
         val parts = listOf(
-            show.nameEn.takeIf { show.name.isNotBlank() || show.titleInImage } to "",
-            show.channel to show.channelLogo,
             show.ott to show.ottLogo,
+            show.channel to show.channelLogo,
+            show.nameEn.takeIf { show.name.isNotBlank() || show.titleInImage } to "",
             badgeText to ""
         ).filter { (text, logo) -> !text.isNullOrBlank() || logoCache[logo] != null }
 
@@ -148,7 +151,10 @@ class Carousel(
             if (i > 0) sb.append("  ·  ")
             val d = logoCache[logo]
             if (d != null) {
-                val h = (subtitle.textSize * LOGO_SCALE).toInt()
+                // Logo ki oonchai text size se alag — text chhota karne pe logo na sikude
+                val h = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP, LOGO_HEIGHT_SP, subtitle.resources.displayMetrics
+                ).toInt()
                 d.setBounds(0, 0, h * d.intrinsicWidth / d.intrinsicHeight.coerceAtLeast(1), h)
                 val start = sb.length
                 sb.append("￼") // object replacement char — yahan image aati hai
@@ -282,8 +288,8 @@ class Carousel(
         const val RESUME_AFTER_MS = 15_000L
         const val OK_GRACE_MS = 800L
         const val CROSSFADE_MS = 500
-        // Logo ki oonchai = subtitle text size × ye
-        const val LOGO_SCALE = 1.6f
+        // Subtitle me logo ki oonchai (pehle 30sp text × 1.6 = 48sp tha, wahi rakha)
+        const val LOGO_HEIGHT_SP = 48f
         // 912MB RAM — 1280x720 bitmap ~3.7MB, full-HD se aadha
         const val POSTER_W = 1280
         const val POSTER_H = 720
