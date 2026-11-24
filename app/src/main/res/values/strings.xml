@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Nani TV</string>
+    <string name="no_data">Shows could not load\n\nPlease check the internet</string>
+    <string name="offline">Offline — showing the saved list</string>
+    <string name="app_missing">This app is not installed on the TV</string>
+    <string name="badge_new_episode">New Episode Today</string>
+    <string name="home_watcher_desc">Brings Nani TV back when the remote Home button opens the default TV home screen.</string>
+</resources>
