@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sirf Android TV launcher ke window-change events. Screen content nahi padhte. -->
+<!-- Window-state (kaunsa app saamne hai — sirf package naam) + focus (Android TV
+     launcher pe button dabna; wahan pehle se ho toh window event nahi aata).
+     Focus events baaki apps ke code me hi chhod diye jaate hain.
+     Screen content kabhi nahi padhte (canRetrieveWindowContent=false). -->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeViewFocused"
     android:accessibilityFeedbackType="feedbackGeneric"
-    android:packageNames="com.google.android.tvlauncher"
     android:notificationTimeout="100"
     android:canRetrieveWindowContent="false"
     android:description="@string/home_watcher_desc" />

@@ -14,9 +14,11 @@ aur Home dabate hi yahi app saamne aata hai.
 - Remote: ◀ ▶ se aage/peeche. Remote dabate hi auto-slide 15 sec ruk jaata hai
 - OK = screen pe jo serial hai wahi khulega. Slide badalte hi (0.8 sec ke
   andar) OK dabaya toh pichla wala khulta hai — jo Nani dekh rahi thi
-- Back (chhota) = kuch nahi. **Back lamba dabao** = Android TV ka asli home
-  khulta hai (settings / doosre apps ke liye), 2 minute tak Home button bhi
-  wahi rehta hai
+- Back = kuch nahi. **Back 3 second pakdo** = Android TV ka asli home
+  khulta hai (settings / doosre apps ke liye). Screen pe upar-daayein
+  English me likha rehta hai. Android home pe 2 minute koi button na dabe
+  → Nani TV khud wapas (button dabte raho toh nahi kudta; Settings jaise
+  doosre app me ho toh beech me nahi aata)
 
 ## Architecture
 
@@ -86,6 +88,7 @@ Poora example is repo ke [config.json](config.json) me hai.
 | `wallpaper` | nahi | Background image URL, jab poster na ho tab dikhta hai |
 | `accent` | nahi | Active dot ka rang (default `#E6C068`) |
 | `slide_seconds` | nahi | Har serial kitne second dikhe, 2–30 (default 3) |
+| `logos` | nahi | `{ "Star Maa": url, "hotstar": url, ... }` — key channel ya `ott` ka naam (capital/space se fark nahi). Subtitle me naam ki jagah logo dikhta hai; load na ho toh naam. Transparent PNG, andhere background pe dikhne wala. Files `logos/` me ([credits](logos/CREDITS.md)) |
 
 **Har show**
 
@@ -215,9 +218,9 @@ Kya kya hota hai:
   (screen on) 3 sec me.
 - **Home button**: Haier firmware Home pe hamesha Android TV launcher
   kholta hai — default-home setting ignore karta hai. `HomeWatcher.kt`
-  (accessibility service, sirf Android TV launcher ke window events sunta
-  hai) usse dekhte hi Nani TV wapas le aata hai. ~0.5 sec purana home
-  dikhta hai.
+  (accessibility service — kaunsa app saamne hai, sirf package naam; screen
+  content nahi padhta) Android TV launcher dikhte hi Nani TV wapas le aata
+  hai. ~0.5 sec purana home dikhta hai.
 - Background service ~45MB RAM leti hai (screen-on sunne ke liye zaroori).
 
 Check: `adb logcat -s NaniTV:*` me `boot broadcast`, `screen on`,

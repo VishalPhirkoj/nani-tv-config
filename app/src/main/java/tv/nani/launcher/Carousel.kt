@@ -1,8 +1,14 @@
 package tv.nani.launcher
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.SystemClock
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ImageSpan
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -11,6 +17,7 @@ import coil.dispose
 import coil.imageLoader
 import coil.load
 import coil.request.ImageRequest
+import coil.request.SuccessResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -53,6 +60,7 @@ class Carousel(
         prevIndex = index
 
         buildDots()
+        preloadLogos()
         render(crossfade = false)
         if (running) schedule(slideMs)
     }
@@ -112,25 +120,71 @@ class Carousel(
         val hasPoster = show.imageLandscape.isNotBlank() || show.imagePortrait.isNotBlank()
         setTitleVisible(!(show.titleInImage && hasPoster))
 
-        // "Chamanthi · Zee Telugu · Zee5 · New Episode Today" — jo khaali hai wo
-        // chhoot jaata hai. Agar title hi English naam hai (Telugu khaali) aur wo
-        // dikh raha hai, toh dobara mat likho.
-        val badgeText = Badge.textFor(show.schedule)?.let { title.resources.getString(it) }
-        val sub = listOf(
-            show.nameEn.takeIf { show.name.isNotBlank() || show.titleInImage },
-            show.channel,
-            show.ott,
-            badgeText
-        )
-            .filter { !it.isNullOrBlank() }
-            .joinToString(" · ")
-        subtitle.text = sub
-        subtitle.visibility = if (sub.isEmpty()) View.GONE else View.VISIBLE
+        renderSubtitle(show)
 
         loadPoster(show, crossfade)
 
         prefetch(shows.getOrNull(Math.floorMod(index + 1, shows.size)))
         updateDots()
+    }
+
+    /**
+     * "Chamanthi · [Zee Telugu logo] · [Zee5 logo] · New Episode Today".
+     * Logo load nahi hua (ya config me nahi) toh uski jagah naam text me.
+     * Ek hi TextView + ImageSpan — lamba naam pehle jaisa doosri line me wrap hota hai.
+     * Agar title hi English naam hai (Telugu khaali) aur wo dikh raha hai, toh dobara mat likho.
+     */
+    private fun renderSubtitle(show: Show) {
+        val badgeText = Badge.textFor(show.schedule)?.let { subtitle.resources.getString(it) }
+        val parts = listOf(
+            show.nameEn.takeIf { show.name.isNotBlank() || show.titleInImage } to "",
+            show.channel to show.channelLogo,
+            show.ott to show.ottLogo,
+            badgeText to ""
+        ).filter { (text, logo) -> !text.isNullOrBlank() || logoCache[logo] != null }
+
+        val sb = SpannableStringBuilder()
+        parts.forEachIndexed { i, (text, logo) ->
+            if (i > 0) sb.append("  ·  ")
+            val d = logoCache[logo]
+            if (d != null) {
+                val h = (subtitle.textSize * LOGO_SCALE).toInt()
+                d.setBounds(0, 0, h * d.intrinsicWidth / d.intrinsicHeight.coerceAtLeast(1), h)
+                val start = sb.length
+                sb.append("￼") // object replacement char — yahan image aati hai
+                val align = if (Build.VERSION.SDK_INT >= 29) ImageSpan.ALIGN_CENTER else ImageSpan.ALIGN_BASELINE
+                sb.setSpan(ImageSpan(d, align), start, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            } else {
+                sb.append(text)
+            }
+        }
+        subtitle.text = sb
+        subtitle.visibility = if (sb.isEmpty()) View.GONE else View.VISIBLE
+    }
+
+    private val logoCache = HashMap<String, Drawable>()
+    private val logoLoading = HashSet<String>()
+
+    /** Saare logos ek baar laao (chhote hain), aate hi current subtitle dobara banao. */
+    private fun preloadLogos() {
+        val ctx = subtitle.context
+        shows.flatMap { listOf(it.channelLogo, it.ottLogo) }
+            .filter { it.isNotBlank() && it !in logoCache && it !in logoLoading }
+            .distinct()
+            .forEach { url ->
+                logoLoading += url
+                scope.launch {
+                    val req = ImageRequest.Builder(ctx).data(url).allowHardware(false).build()
+                    val d = (ctx.imageLoader.execute(req) as? SuccessResult)?.drawable
+                    logoLoading -= url
+                    if (d == null) {
+                        Log.d(AutoStart.TAG, "logo fail: $url")
+                        return@launch
+                    }
+                    logoCache[url] = d
+                    shows.getOrNull(index)?.let { renderSubtitle(it) }
+                }
+            }
     }
 
     /** Landscape pehle; na ho ya fail ho toh portrait; wo bhi nahi toh khaali. */
@@ -228,6 +282,8 @@ class Carousel(
         const val RESUME_AFTER_MS = 15_000L
         const val OK_GRACE_MS = 800L
         const val CROSSFADE_MS = 500
+        // Logo ki oonchai = subtitle text size × ye
+        const val LOGO_SCALE = 1.6f
         // 912MB RAM — 1280x720 bitmap ~3.7MB, full-HD se aadha
         const val POSTER_W = 1280
         const val POSTER_H = 720

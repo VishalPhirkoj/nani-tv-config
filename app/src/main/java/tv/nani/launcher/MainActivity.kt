@@ -23,6 +23,11 @@ class MainActivity : ComponentActivity() {
     private lateinit var carousel: Carousel
 
     private var loadedOnce = false
+    private var escapeFired = false
+
+    private companion object {
+        const val ESCAPE_HOLD_MS = 3_000L
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,26 +75,28 @@ class MainActivity : ComponentActivity() {
                 // Long-press pe repeat events aate hain — sirf pehla
                 if (event.repeatCount == 0) carousel.current()?.let { open(it) }
             }
-            // Ye TV ka home hai — chhota Back kuch nahi karta (warna app band →
-            // khaali screen). Lamba Back = bahar nikalne ka raasta, onKeyLongPress me.
-            KeyEvent.KEYCODE_BACK -> event.startTracking()
+            // Ye TV ka home hai — Back dabane pe kuch nahi (warna app band →
+            // khaali screen). Back 3 sec PAKADNA = bahar nikalne ka raasta
+            // (settings / doosre apps). Android ka default long-press 0.5 sec hai —
+            // Nani se galti se ho jaata tha, isliye apna lamba threshold.
+            KeyEvent.KEYCODE_BACK -> {
+                val held = event.eventTime - event.downTime
+                if (event.repeatCount > 0 && !escapeFired && held >= ESCAPE_HOLD_MS) {
+                    escapeFired = true
+                    HomeWatcher.openStockLauncher(this)
+                }
+            }
             else -> return super.onKeyDown(keyCode, event)
         }
         return true
     }
 
-    override fun onKeyLongPress(keyCode: Int, event: KeyEvent): Boolean {
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        // Back chhoda: kuch nahi. super ko mat do, warna onBackPressed → app band
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // Settings / doosre apps ke liye Android TV launcher, watcher 2 min chup
-            HomeWatcher.openStockLauncher(this)
+            escapeFired = false
             return true
         }
-        return super.onKeyLongPress(keyCode, event)
-    }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        // Chhota Back: kuch nahi. super ko mat do, warna onBackPressed → app band
-        if (keyCode == KeyEvent.KEYCODE_BACK) return true
         return super.onKeyUp(keyCode, event)
     }
 

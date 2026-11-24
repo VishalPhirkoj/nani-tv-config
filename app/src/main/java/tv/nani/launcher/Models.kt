@@ -15,6 +15,10 @@ data class Show(
     val channel: String,
     /** OTT app ka dikhane wala naam ("JioHotstar"), khaali ho sakta hai */
     val ott: String,
+    /** config ke "logos" se — channel ka logo URL, khaali ho toh text */
+    val channelLogo: String,
+    /** config ke "logos" se — OTT ka logo URL, khaali ho toh text */
+    val ottLogo: String,
     /** Carousel poster, 1280x720. Khaali ho sakta hai */
     val imageLandscape: String,
     /** Fallback jab landscape na ho / load fail ho. Khaali ho sakta hai */

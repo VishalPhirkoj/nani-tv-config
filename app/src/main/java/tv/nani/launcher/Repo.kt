@@ -69,6 +69,13 @@ class Repo(ctx: Context) {
         val root = JSONObject(raw)
         val arr = root.getJSONArray("shows")
 
+        // "logos": { "Star Maa": url, "hotstar": url } — key channel ya ott ka
+        // naam; capital/space se fark nahi ("Zee Telugu" = "zeetelugu")
+        val logos = HashMap<String, String>()
+        root.optJSONObject("logos")?.let { o ->
+            o.keys().forEach { k -> o.str(k).takeIf { it.isNotBlank() }?.let { logos[logoKey(k)] = it } }
+        }
+
         val shows = ArrayList<Show>(arr.length())
         for (i in 0 until arr.length()) {
             val s = arr.getJSONObject(i)
@@ -91,6 +98,8 @@ class Repo(ctx: Context) {
                 nameEn = s.str("name_en"),
                 channel = s.str("channel"),
                 ott = ott?.displayName ?: ottRaw,
+                channelLogo = logos[logoKey(s.str("channel"))].orEmpty(),
+                ottLogo = (logos[logoKey(ottRaw)] ?: logos[logoKey(ott?.displayName.orEmpty())]).orEmpty(),
                 // Purana "image" field bhi chalega
                 imageLandscape = s.str("image_landscape").ifBlank { s.str("image") },
                 imagePortrait = s.str("image_portrait"),
@@ -118,4 +127,6 @@ class Repo(ctx: Context) {
      */
     private fun JSONObject.str(key: String): String =
         if (isNull(key)) "" else optString(key).trim()
+
+    private fun logoKey(name: String) = name.lowercase().filter { it.isLetterOrDigit() }
 }

@@ -32,6 +32,23 @@
         android:layout_gravity="bottom"
         android:background="@drawable/bottom_scrim" />
 
+    <!-- Bahar nikalne ka raasta — halka, kone me, poster na dhake -->
+    <TextView
+        android:id="@+id/escape_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:background="#66000000"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:text="@string/escape_hint"
+        android:textColor="#CCFFFFFF"
+        android:textSize="16sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,8 +1,14 @@
 {
-  "updated": "2026-11-24 22:20",
+  "updated": "2026-11-24 23:40",
   "wallpaper": null,
   "accent": "#E6C068",
   "slide_seconds": 7,
+  "logos": {
+    "Star Maa": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/logos/star-maa.png",
+    "Zee Telugu": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/logos/zee-telugu.png",
+    "hotstar": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/logos/jiohotstar.png",
+    "zee5": "https://raw.githubusercontent.com/VishalPhirkoj/nani-tv-config/refs/heads/main/logos/zee5.png"
+  },
   "shows": [
     {
       "id": "brahmamudi",
